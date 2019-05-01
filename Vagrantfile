@@ -1,5 +1,18 @@
-WORKERS=2
+require 'getoptlong'
+
 OS_IMAGE="bento/ubuntu-16.04"
+workers=1
+
+opts = GetoptLong.new(
+    [ '--scale', GetoptLong::OPTIONAL_ARGUMENT ]
+)
+
+opts.each do |opt, arg|
+  case opt
+  when '--scale'
+    workers = arg.to_i
+  end
+end
 
 Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
@@ -13,19 +26,19 @@ Vagrant.configure("2") do |config|
     master.vm.box = OS_IMAGE
     master.vm.network "private_network", type: "dhcp"
     master.vm.hostname = "k8s-master"
-    master.vm.provision "docker"
+    master.vm.provision "shell", inline: "cp /vagrant/set_env_vars.sh /etc/profile.d/"
     master.vm.provision "shell", path: "provision_k8s_common.sh"
     master.vm.provision "shell", path: "provision_k8s_master.sh"
   end
 
-  (1..WORKERS).each do |i|
+  (1..workers).each do |i|
     config.vm.define "k8s-worker-#{i}" do |node|
       node.vm.box = OS_IMAGE
       node.vm.network "private_network", type: "dhcp"
       node.vm.hostname = "k8s-worker-#{i}"
-      node.vm.provision "docker"
+      node.vm.provision "shell", inline: "cp /vagrant/set_env_vars.sh /etc/profile.d/"
       node.vm.provision "shell", path: "provision_k8s_common.sh"
-      node.vm.provision "shell", inline: "sh /vagrant/join-command.sh"
+      node.vm.provision "shell", path: "join-command.sh"
     end
   end
 end
