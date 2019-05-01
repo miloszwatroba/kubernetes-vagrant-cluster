@@ -29,4 +29,12 @@ vagrant ssh k8s-master
 kubectl -n kube-system edit service kubernetes-dashboard
 ```
 
-2. To grant admin privileges to the dashboard's service account create ClusterRoleBinding using `kubectl create -f /vagrant/dashboard-admin.yaml`
+2. To grant admin privileges to the dashboard's service account create ClusterRoleBinding using.
+```
+vagrant ssh k8s-master -- kubectl create -f /vagrant/dashboard-admin.yaml
+```
+
+3. Get token with kubectl to access the dashboard
+```bash
+kubectl -n kube-system describe secrets `kubectl -n kube-system get secret | grep kubernetes-dashboard-token | awk '{print $1}'` | grep token: | awk '{print $2}'
+```

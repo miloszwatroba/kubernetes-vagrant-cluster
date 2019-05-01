@@ -28,9 +28,9 @@ Vagrant.configure("2") do |config|
     master.vm.box = OS_IMAGE
     master.vm.network "private_network", type: "dhcp"
     master.vm.hostname = "k8s-master"
-    master.vm.provision "shell", inline: "cp /vagrant/set_env_vars.sh /etc/profile.d/"
-    master.vm.provision "shell", path: "provision_k8s_common.sh"
-    master.vm.provision "shell", path: "provision_k8s_master.sh"
+    master.vm.provision "shell", inline: "cp /vagrant/scripts/set_env_vars.sh /etc/profile.d/"
+    master.vm.provision "shell", path: "scripts/provision_k8s_common.sh"
+    master.vm.provision "shell", path: "scripts/provision_k8s_master.sh"
   end
 
   (1..workers).each do |i|
@@ -38,9 +38,9 @@ Vagrant.configure("2") do |config|
       node.vm.box = OS_IMAGE
       node.vm.network "private_network", type: "dhcp"
       node.vm.hostname = "k8s-worker-#{i}"
-      node.vm.provision "shell", inline: "cp /vagrant/set_env_vars.sh /etc/profile.d/"
-      node.vm.provision "shell", path: "provision_k8s_common.sh"
-      node.vm.provision "shell", path: "join-command.sh"
+      node.vm.provision "shell", inline: "cp /vagrant/scripts/set_env_vars.sh /etc/profile.d/"
+      node.vm.provision "shell", path: "scripts/provision_k8s_common.sh"
+      node.vm.provision "shell", path: "scripts/join-command.sh"
     end
   end
 end

@@ -2,7 +2,7 @@
 
 echo '[Kubernetes] Init kubeadm'
 kubeadm init --apiserver-advertise-address=$IPADDR --apiserver-cert-extra-sans=$IPADDR --node-name $NODENAME --pod-network-cidr=192.168.0.0/16
-#Install ui
+
 
 echo '[Kubernetes] Setup kubeconfig for non-root user'
 mkdir -p /home/vagrant/.kube
@@ -25,5 +25,5 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 
 echo '[Kubernetes] Copy join command'
-kubeadm token create --print-join-command > /vagrant/join-command.sh
-chmod +x /vagrant/join-command.sh
+kubeadm token create --print-join-command > /vagrant/scripts/join-command.sh
+chmod +x /vagrant/scripts/join-command.sh
