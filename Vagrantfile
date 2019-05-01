@@ -7,6 +7,8 @@ opts = GetoptLong.new(
     [ '--scale', GetoptLong::OPTIONAL_ARGUMENT ]
 )
 
+opts.ordering=(GetoptLong::REQUIRE_ORDER)
+
 opts.each do |opt, arg|
   case opt
   when '--scale'
